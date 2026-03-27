@@ -200,29 +200,22 @@ export default function DemoGenerator() {
     ].join("\n");
   };
 
-  const handleExport = async () => {
+  const handleExport = () => {
     if (!scenario) return;
     const text = buildExportText();
+    const slug = scenario.company.replace(/[^a-zA-Z0-9]+/g, "_").replace(/_+$/, "");
+    const filename = `Demo_Briefing_${slug}.md`;
 
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      ta.style.cssText = "position:fixed;top:-9999px;left:-9999px;opacity:0";
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      document.execCommand("copy");
-      document.body.removeChild(ta);
-    }
+    const blob = new Blob([text], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 
-    const title = encodeURIComponent(`Demo Briefing — ${scenario.company}`);
-    const body = encodeURIComponent(text);
-    window.open(
-      `https://docs.google.com/document/create?title=${title}&body=${body}`,
-      "_blank"
-    );
     setExported(true);
     setTimeout(() => setExported(false), 3500);
   };
@@ -704,7 +697,7 @@ export default function DemoGenerator() {
                 whiteSpace: "nowrap",
               }}
             >
-              {exported ? "✓ EXPORTED" : "⬆ EXPORT TO GOOGLE DOCS"}
+              {exported ? "✓ DOWNLOADED" : "⬇ DOWNLOAD BRIEFING"}
             </button>
           </div>
         )}
