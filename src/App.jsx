@@ -25,13 +25,13 @@ const QUICK_IDEAS = [
 ];
 
 const STEPS = [
-  { key: "objects", step: "01", label: "Custom Objects",          icon: "◫" },
-  { key: "data",    step: "02", label: "Sample Data",             icon: "⊞" },
-  { key: "perms",   step: "03", label: "Permission Sets",         icon: "◈" },
-  { key: "flows",   step: "04", label: "Flows & Automations",     icon: "⟳" },
-  { key: "deploy",  step: "05", label: "Deploy to Org",           icon: "⬆" },
-  { key: "lwc",     step: "06", label: "Lightning Web Component", icon: "★" },
-  { key: "github",  step: "07", label: "Push to GitHub",          icon: "⊙" },
+  { key: "objects", step: "01", label: "Custom Objects",          icon: "◫", desc: "This prompt tells Cursor to generate the Salesforce metadata XML for your custom objects, fields, and relationships — the data model that powers the entire demo." },
+  { key: "data",    step: "02", label: "Sample Data",             icon: "⊞", desc: "Creates realistic sample records so the demo has believable data from the start. Cursor will generate Apex anonymous scripts or data import files to populate your objects." },
+  { key: "perms",   step: "03", label: "Permission Sets",         icon: "◈", desc: "Generates a permission set granting full CRUD access to your custom objects. Without this, users in the org won't be able to see or interact with the demo data." },
+  { key: "flows",   step: "04", label: "Flows & Automations",     icon: "⟳", desc: "Builds declarative automation — record-triggered flows, prompt templates, and actions — that bring the demo to life with real business logic." },
+  { key: "deploy",  step: "05", label: "Deploy to Org",           icon: "⬆", desc: "Pushes all the generated metadata to your Salesforce scratch org using the SF CLI. This is where everything you've built goes live." },
+  { key: "lwc",     step: "06", label: "Lightning Web Component", icon: "★", desc: "The showstopper — Cursor builds a custom Lightning Web Component that provides a visually impressive, interactive UI tailored to the demo scenario." },
+  { key: "github",  step: "07", label: "Push to GitHub",          icon: "⊙", desc: "Commits the entire project to a GitHub repository so the demo is versioned, shareable, and ready for future iterations." },
 ];
 
 // ── Sub-components ──────────────────────────────────────────────────────────
@@ -106,6 +106,20 @@ function PromptCard({ stepMeta, prompt, delay, copied, onCopy }) {
           {copied === stepMeta.key ? "✓ COPIED" : "COPY"}
         </button>
       </div>
+      {stepMeta.desc && (
+        <div
+          style={{
+            padding: "10px 16px",
+            fontSize: 11,
+            lineHeight: 1.55,
+            color: "rgba(255,255,255,0.35)",
+            borderBottom: "1px solid rgba(255,255,255,0.04)",
+            background: "rgba(0,161,224,0.03)",
+          }}
+        >
+          {stepMeta.desc}
+        </div>
+      )}
       <div
         style={{
           padding: "14px 16px",
