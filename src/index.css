@@ -1,0 +1,81 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #0a0e1a;
+  color: #e8eaf6;
+  font-family: monospace;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes borderPulse {
+  0%, 100% { border-color: rgba(0,161,224,0.4); box-shadow: 0 0 20px rgba(0,161,224,0.1); }
+  50% { border-color: rgba(0,161,224,0.8); box-shadow: 0 0 40px rgba(0,161,224,0.2); }
+}
+
+@keyframes btnGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(0,161,224,0.4), inset 0 0 20px rgba(0,161,224,0.05); }
+  50% { box-shadow: 0 0 40px rgba(0,161,224,0.7), inset 0 0 30px rgba(0,161,224,0.1); }
+}
+
+.reveal-item {
+  opacity: 0;
+  animation: fadeSlideUp 0.5s ease forwards;
+}
+
+.btn-generate:hover:not(:disabled) {
+  background: rgba(0,161,224,0.2) !important;
+  transform: scale(1.02);
+}
+.btn-generate:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.object-tag:hover {
+  background: rgba(0,161,224,0.3) !important;
+  border-color: rgba(0,161,224,0.6) !important;
+}
+
+.prompt-card:hover {
+  border-color: rgba(0,161,224,0.25) !important;
+}
+
+.cli-row:hover {
+  background: rgba(0,161,224,0.06) !important;
+}
+
+.quick-chip:hover {
+  background: rgba(0,161,224,0.18) !important;
+  border-color: rgba(0,161,224,0.5) !important;
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+
+.idea-input:focus,
+.real-input:focus {
+  border-color: rgba(0,161,224,0.6) !important;
+  box-shadow: 0 0 0 2px rgba(0,161,224,0.1) !important;
+  outline: none !important;
+}
+
+.mode-btn {
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.mode-btn:hover {
+  opacity: 0.9;
+}
