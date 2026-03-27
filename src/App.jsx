@@ -158,9 +158,9 @@ export default function DemoGenerator() {
     }
   };
 
-  const handleExport = () => {
-    if (!scenario) return;
-    const lines = [
+  const buildExportText = () => {
+    if (!scenario) return "";
+    return [
       `DEMO BRIEFING — ${scenario.company}`,
       `${"=".repeat(60)}`,
       ``,
@@ -197,20 +197,32 @@ export default function DemoGenerator() {
       `STEP 00 — PROJECT MANIFEST`,
       `${"-".repeat(40)}`,
       ...CLI_STEPS.map((c) => `  ${c.cmd}   # ${c.desc}`),
-    ];
+    ].join("\n");
+  };
+
+  const handleExport = async () => {
+    if (!scenario) return;
+    const text = buildExportText();
+
     try {
+      await navigator.clipboard.writeText(text);
+    } catch {
       const ta = document.createElement("textarea");
-      ta.value = lines.join("\n");
+      ta.value = text;
       ta.style.cssText = "position:fixed;top:-9999px;left:-9999px;opacity:0";
       document.body.appendChild(ta);
       ta.focus();
       ta.select();
       document.execCommand("copy");
       document.body.removeChild(ta);
-    } catch {
-      /* clipboard fallback failed */
     }
-    window.open("https://docs.google.com/document/create", "_blank");
+
+    const title = encodeURIComponent(`Demo Briefing — ${scenario.company}`);
+    const body = encodeURIComponent(text);
+    window.open(
+      `https://docs.google.com/document/create?title=${title}&body=${body}`,
+      "_blank"
+    );
     setExported(true);
     setTimeout(() => setExported(false), 3500);
   };
@@ -291,7 +303,7 @@ export default function DemoGenerator() {
       </div>
 
       {/* Mode Toggle */}
-      <div style={{ width: "100%", maxWidth: 780, marginBottom: 28 }}>
+      <div style={{ width: "100%", maxWidth: 780, marginBottom: 28, display: "flex", justifyContent: "center" }}>
         <div
           style={{
             display: "flex",
@@ -692,7 +704,7 @@ export default function DemoGenerator() {
                 whiteSpace: "nowrap",
               }}
             >
-              {exported ? "✓ COPIED — PASTE IN DOC" : "⬆ EXPORT TO GOOGLE DOCS"}
+              {exported ? "✓ EXPORTED" : "⬆ EXPORT TO GOOGLE DOCS"}
             </button>
           </div>
         )}
