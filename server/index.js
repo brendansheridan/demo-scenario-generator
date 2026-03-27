@@ -121,17 +121,28 @@ async function callGemini(systemPrompt, userMessage, useSearch = false) {
 
   if (!res.ok) {
     const msg = data?.error?.message || `Gemini API error ${res.status}`;
+    console.error("Gemini API error:", JSON.stringify(data, null, 2));
     throw new Error(msg);
   }
 
-  const textPart = (data.candidates?.[0]?.content?.parts || [])
-    .filter((p) => p.text)
-    .pop();
+  const parts = data.candidates?.[0]?.content?.parts || [];
 
-  const text = textPart?.text || "";
-  const stripped = text.replace(/```json|```/g, "");
+  // Gemini 2.5 Flash returns "thought" parts (thought: true) then text parts.
+  // Collect all non-thought text parts and concatenate them.
+  const textParts = parts.filter((p) => p.text && !p.thought);
+  const allText = textParts.map((p) => p.text).join("\n");
+
+  if (!allText) {
+    console.error("Gemini response parts:", JSON.stringify(parts.map(p => ({ thought: p.thought, hasText: !!p.text, textPreview: p.text?.slice(0, 100) })), null, 2));
+    throw new Error("No text content in Gemini response. Try again.");
+  }
+
+  const stripped = allText.replace(/```json|```/g, "");
   const match = stripped.match(/\{[\s\S]*\}/);
-  if (!match) throw new Error("No JSON found in Gemini response. Try again.");
+  if (!match) {
+    console.error("Could not find JSON in response text:", allText.slice(0, 500));
+    throw new Error("No JSON found in Gemini response. Try again.");
+  }
 
   return JSON.parse(match[0]);
 }
